@@ -1,0 +1,16 @@
+# Systematic Benchmarking and Evaluation Protocols for RAG Systems
+Authors: Dr. Raymond Vance, AI Reliability Research Group
+Published: 2024
+
+## Page 1: Evaluation Methodologies in Enterprise RAG
+Evaluating Retrieval-Augmented Generation requires disentangling the retrieval module from the generation module. End-to-end evaluation alone fails to identify whether answer inaccuracies arise from retrieval failure (retriever did not fetch relevant context) or generation failure (LLM hallucinated despite receiving relevant context).
+
+Retrieval metrics measure ranking quality:
+- Recall@K: Measures the percentage of queries where at least one ground-truth relevant document is retrieved in the top K positions.
+- Mean Reciprocal Rank (MRR): Calculates the average reciprocal rank 1/rank of the first relevant document across all benchmark queries.
+- Normalized Discounted Cumulative Gain (NDCG@K): Evaluates graded relevance taking into account the position of all relevant items.
+
+## Page 2: Generation Quality and Hallucination Quantification
+Faithfulness evaluates whether every factual claim in the generated answer is grounded in the retrieved context passages. Answer relevance computes the alignment between the generated response and the initial user question.
+
+Strict similarity cutoff thresholds prevent the generator from conditioning on noise. Prompt guardrails force the model to state information is unavailable when confidence is low. When no retrieved passage exceeds a similarity threshold (e.g. 0.20), refusing to answer achieves a faithfulness score of 1.0, preserving system trust and zero hallucinations.

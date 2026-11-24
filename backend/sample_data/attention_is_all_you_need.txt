@@ -1,0 +1,24 @@
+# Attention Is All You Need: Architectural Deep Dive and Empirical Analysis
+Authors: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin
+Published: NeurIPS 2017
+
+## Page 1: Abstract and Architectural Motivation
+The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The Transformer proposes an architecture eschewing recurrence and instead relying entirely on an attention mechanism to draw global dependencies between input and output. The Transformer allows for significantly more parallelization and can reach a state of the art in translation quality after being trained for as little as twelve hours on eight P100 GPUs.
+
+Recurrent models typically factor computation along the symbol positions of the input and output sequences. Aligning the positions to steps in computation time, they generate a sequence of hidden states h_t, as a function of the previous hidden state h_{t-1} and the input for position t. This inherently sequential nature precludes parallelization within training examples, which becomes critical at longer sequence lengths, as memory constraints limit batching across examples.
+
+## Page 2: Scaled Dot-Product and Multi-Head Attention
+An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.
+
+We compute the attention function on a set of queries simultaneously, packed into a matrix Q. The keys and values are also packed into matrices K and V. We compute the matrix of outputs as:
+Attention(Q, K, V) = softmax(Q * K^T / sqrt(d_k)) * V
+
+We divide by the square root of d_k because for large values of d_k, the dot products grow large in magnitude, pushing the softmax function into regions with extremely small gradients. Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions.
+
+MultiHead(Q, K, V) = Concat(head_1, ..., head_h) * W^O
+where head_i = Attention(Q * W_i^Q, K * W_i^K, V * W_i^V)
+
+## Page 3: Computational Complexity and Empirical Results
+Self-attention layers connect all positions with a constant number of sequentially executed operations O(1), whereas recurrent layers require O(n) sequential operations. In terms of computational complexity, per-layer complexity for self-attention is O(n^2 * d), while recurrent layers require O(n * d^2) per-layer complexity. When the sequence length n is smaller than the representation dimensionality d, self-attention layers are significantly faster than recurrent layers.
+
+On the WMT 2014 English-to-German translation task, the big Transformer model achieves a BLEU score of 28.4, outperforming the best existing models and ensembles by over 2.0 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new state-of-the-art BLEU score of 41.8 after training for 3.5 days on 8 GPUs. Training cost is a small fraction of the training costs of the best models from the literature.

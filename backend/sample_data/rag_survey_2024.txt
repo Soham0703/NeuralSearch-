@@ -1,0 +1,24 @@
+# Retrieval-Augmented Generation for Large Language Models: A Comprehensive Survey
+Authors: Yunfan Gao, Yun Xiong, Xinyu Gao, Kangxiang Jia, Jinliu Pan, Yuxi Bi, Yi Dai, Jiawei Sun, Haofen Wang
+Published: 2024 AI Review
+
+## Page 1: Introduction and Evolution of RAG Paradigms
+Large Language Models (LLMs) demonstrate remarkable generative capabilities but suffer from inherent limitations including hallucination, out-of-date parametric knowledge, and untraceable reasoning steps. Retrieval-Augmented Generation (RAG) mitigates these bottlenecks by dynamically fetching relevant external knowledge from non-parametric document stores and conditioning generation on grounded context.
+
+The development of RAG encompasses three distinct evolutionary paradigms:
+1. Naive RAG: Consists of standard indexing, vector retrieval, and generation. Prone to low retrieval recall, out-of-domain semantic drift, and hallucinated responses when passages contain contradictory information.
+2. Advanced RAG: Introduces pre-retrieval optimization (query expansion, sliding-window chunking) and post-retrieval optimization (neural reranking, context compression).
+3. Modular RAG: Deconstructs RAG into decoupled, interchangeable modules including routing, search, memory, verification, and evaluation.
+
+## Page 2: Two-Stage Hybrid Retrieval and Cross-Encoder Reranking
+In enterprise-grade RAG implementations, a two-stage retrieval architecture is standard. In the first candidate retrieval stage, hybrid search leverages dense retrieval for semantic similarity and BM25 for precise keyword matching. The results are aggregated using Reciprocal Rank Fusion (RRF).
+
+In the second post-retrieval stage, a neural Cross-Encoder is deployed. Unlike bi-encoders that encode queries and passages independently into fixed vector representations, Cross-Encoders allow full cross-attention between query and passage tokens, yielding superior ranking precision. Two-stage retrieval uses bi-encoders for high-recall candidate generation and cross-encoders for precision reranking.
+
+## Page 3: Evaluation Metrics and Hallucination Mitigations
+RAG evaluation typically relies on the RAG Triad:
+- Context Relevance: Verifies that retrieved passages are strictly pertinent to the user query.
+- Faithfulness: Evaluates whether every factual claim in the generated answer is grounded in the retrieved context passages.
+- Answer Relevance: Computes the alignment between the generated response and the initial user question.
+
+Mitigation strategies for hallucinations include strict similarity cutoff thresholds to prevent conditioning on noise, and prompt guardrails that force the model to state information is unavailable when confidence is low.

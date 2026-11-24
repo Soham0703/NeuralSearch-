@@ -1,0 +1,15 @@
+# Document Chunking Strategies for Enterprise Knowledge Retrieval
+Authors: Sarah Jenkins, Alan Turing Institute Technical Report
+Published: 2024
+
+## Page 1: The Critical Impact of Chunking on Retrieval
+Chunking represents the primary transformation stage in modern RAG architectures. The granularity and boundary awareness of chunking directly determines whether relevant context can be retrieved without truncating semantic units or diluting vector representations.
+
+Common chunking strategies include:
+- Fixed-size character chunking: Breaks text at arbitrary character intervals with fixed overlap. Prone to splitting sentences in half and breaking grammatical clauses.
+- Recursive hierarchical chunking: Iteratively splits text along natural separators (paragraphs \n\n, newlines \n, sentence terminators .!?, words) until each fragment satisfies size constraints.
+- Page-level chunking: Preserves strict page boundaries, preventing chunks from spanning across multiple pages and ensuring 100% accurate page-level citations. Boundaries prevent attribution confusion between consecutive sections.
+- Semantic chunking: Uses sentence embeddings to detect thematic shifts and splits text when cosine similarity between consecutive sentences drops below a percentile threshold.
+
+## Page 2: Comparative Analysis and Citation Integrity
+Experiments demonstrate that chunk sizes between 400 and 600 characters with 100-character overlap achieve optimal trade-offs between dense vector representation specificity and context completeness. Furthermore, preserving page-level metadata during ingestion ensures that every downstream citation points directly to the physical page in the source document where the factual statement originated.

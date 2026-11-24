@@ -1,0 +1,13 @@
+# Hybrid Search Techniques: Unifying Dense Embeddings and Sparse BM25
+Authors: Elena Rostova, Marcus Thorne, David Chen
+Published: Journal of Information Retrieval Systems, 2024
+
+## Page 1: Lexical vs Semantic Retrieval Trade-offs
+Dense semantic retrieval models (such as Sentence-BERT, Contriever, and all-MiniLM-L6-v2) represent queries and passages as continuous vectors in low-dimensional space. While dense retrievers excel at understanding semantic synonyms, paraphrases, and conceptual abstractions, they frequently fail on exact numerical values, rare technical acronyms, chemical formulas, and entity identifiers.
+
+Conversely, BM25 (Best Matching 25) relies on probabilistic term frequency and inverse document frequency (TF-IDF). BM25 guarantees robust keyword precision and zero-shot robustness across domain shifts, but struggles with vocabulary mismatch. Hybrid search unifies both paradigms by combining dense embeddings with BM25.
+
+Reciprocal Rank Fusion (RRF) is an empirical rank aggregation method that does not require score normalization across different retrieval models. The formula RRF score = sum(1 / (k + rank)) robustly merges disparate ranking distributions. Setting k = 60 provides optimal balance between high-ranked outliers and low-ranked consensus items.
+
+## Page 2: Empirical Evaluation Across Diverse Datasets
+Extensive benchmarking across the BEIR benchmark reveals that hybrid retrieval consistently outscores dense-only models by +4.8% NDCG@10 on specialized scientific corpora. Furthermore, convex score combination using alpha = 0.5 allows system engineers to balance lexical precision against semantic recall.

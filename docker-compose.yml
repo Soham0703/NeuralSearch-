@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: neuralsearch_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: neuralsearch_user
+      POSTGRES_PASSWORD: neuralsearch_password
+      POSTGRES_DB: neuralsearch_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U neuralsearch_user -d neuralsearch_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: neuralsearch_backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://neuralsearch_user:neuralsearch_password@db:5432/neuralsearch_db
+      DEFAULT_LLM_PROVIDER: mock
+      EMBEDDING_MODEL_NAME: all-MiniLM-L6-v2
+      RERANKER_MODEL_NAME: cross-encoder/ms-marco-MiniLM-L-6-v2
+      # OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      # GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      # ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    ports:
+      - "8000:8000"
+    volumes:
+      - app_data:/app/backend/data
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: neuralsearch_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:
+  app_data:
